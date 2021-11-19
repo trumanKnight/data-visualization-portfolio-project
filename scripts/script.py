@@ -72,3 +72,22 @@ for country in countries:
 plt.subplots_adjust(wspace = .3)
 plt.savefig(iPATH + 'Life Ex v Time vs. Pct Total GDP v Time.PNG')
 plt.clf()
+
+fig = plt.figure(figsize = (20,20))
+
+prev_GDP = df.groupby('Country')['GDP'].shift()
+df['GDP % Growth'] = ( df.GDP - prev_GDP ) / prev_GDP *100
+
+prev_total_GDP = df.groupby('Country')['Total GDP'].shift()
+df['Total GDP % Growth'] = ( df['Total GDP'] - prev_total_GDP ) / prev_total_GDP * 100
+
+i = 1
+for country in df.Country.unique():
+    ax = fig.add_subplot(2,3,i)
+    sns.lineplot(data = df[df.Country == country], x = 'Year', y = 'GDP % Growth', label = f'{country}')
+    sns.lineplot(data = df[df.Country == country], x = 'Year', y = 'Total GDP % Growth', color = 'black', label = 'Total GDP % Growth')
+    plt.title(f'{country} YoY GDP % Growth)')
+    plt.legend()
+    i += 1
+plt.savefig(f'{iPATH}YoY GDP Pct Growth.PNG')
+plt.clf()
