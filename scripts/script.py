@@ -5,16 +5,27 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 import numpy as np
+#############################################################################################################
 
+#setting up PATH variables to access and direct files created by the script
 PATH = os.path.dirname(os.getcwd())
 dPATH = PATH + '/data/'
 sPATH = PATH + '/scripts/'
 iPATH = PATH + '/images/'
+#############################################################################################################
+
+#load data into df
 
 df = pd.read_csv(dPATH + 'all_data.csv')
+#############################################################################################################
+
+#create a data frame with the Average GDP per country over the full time frame, sorted by largest to smallest
 
 GDP_descending = df.groupby('Country', as_index=False)[['Country','GDP']].mean()
 GDP_average_descending = GDP_descending.sort_values('GDP', ascending = False, ignore_index  = True)
+#############################################################################################################
+
+#create a plot of the Average GDP by country, and save it
 
 time_span = df.Year.max() - df.Year.min() + 1
 
@@ -25,12 +36,17 @@ ax.set_title(f'Trailing {time_span} Year Average GDP by Country', fontsize=12)
 
 plt.savefig(iPATH + f'Trailing {time_span} Year Average GDP by Country.PNG')
 plt.clf()
+#############################################################################################################
 
+#create a plot for GDP over Time by country, and save it
 fig = plt.figure(figsize = (12,12))
 ax = sns.lineplot(data = df, x = 'Year', y = 'GDP', hue = 'Country')
 
 plt.savefig(iPATH + 'GDP vs. Time -- hue = Country.PNG')
 plt.clf()
+#############################################################################################################
+
+#Create a 2x3 display of plots showing Life Expectancy v GDP, and save it
 
 countries = list(df['Country'].unique())
 
@@ -45,7 +61,9 @@ for country in countries:
 
 plt.savefig(iPATH + 'Life Expectancy vs. GDP -- 2x3.PNG')
 plt.clf()
+#############################################################################################################
 
+#calculating each 
 total_GDP_by_year = df.groupby('Year').sum()['GDP']
 
 for row in df.index:
